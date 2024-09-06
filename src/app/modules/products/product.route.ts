@@ -9,10 +9,7 @@ router.post(
   authVerify(USER_Role.USER, USER_Role.ADMIN),
   ProductController.createProduct
 );
-router.get(
-  "/products",
-  authVerify(USER_Role.USER, USER_Role.ADMIN),
-  ProductController.products
-);
+// authVerify(USER_Role.USER, USER_Role.ADMIN),
+router.get("/products", ProductController.products);
 
 export const ProductRoute = router;
