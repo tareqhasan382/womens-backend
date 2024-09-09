@@ -8,9 +8,10 @@ const createReview = catchAsync(
     try {
       const user = req.user;
       const data = req.body;
+
       const result = await ReviewModel.create({
         ...data,
-        user: user?.userId,
+        user: user?.userId, // "66d5fbcf6f150f8430aaf733",
       });
       // Update the product with the review ID
       await ProductModel.findByIdAndUpdate(data.product, {
@@ -31,14 +32,15 @@ const createReview = catchAsync(
 );
 const reviews = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log("req reviews");
+    const { id } = req.params;
     try {
-      const result = await ReviewModel.find()
+      const result = await ReviewModel.find({ product: id })
         .populate({
-          path: "product",
-          select: "-__v -createdAt -updatedAt",
+          path: "user",
+          select: "name image",
         })
         .select("-__v -createdAt -updatedAt");
+
       if (result.length < 1) {
         return res.status(404).json({
           success: false,
@@ -71,3 +73,12 @@ export const ReviewController = {
 // const bookingData = await BookingModel.findById(result._id)
 //   .lean()
 //   .select("-__v -createdAt -updatedAt");
+
+//===================================================
+/*
+{
+  path: "user",
+  select: "-__v -createdAt -updatedAt",
+}
+
+*/

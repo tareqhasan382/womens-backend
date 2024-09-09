@@ -9,7 +9,13 @@ router.post(
   authVerify(USER_Role.USER, USER_Role.ADMIN),
   ProductController.createProduct
 );
-// authVerify(USER_Role.USER, USER_Role.ADMIN),
 router.get("/products", ProductController.products);
+router.get("/flatSale", ProductController.flatSale);
+router.get("/product/:id", ProductController.product);
+router.delete(
+  "/product/:id",
+  authVerify(USER_Role.ADMIN),
+  ProductController.deleteProduct
+);
 
 export const ProductRoute = router;

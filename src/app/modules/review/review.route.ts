@@ -5,14 +5,10 @@ import { ReviewController } from "./review.controller";
 const router = express.Router();
 
 router.post(
-  "/review",
-  authVerify(USER_Role.USER, USER_Role.ADMIN),
+  "/create-review",
+  authVerify(USER_Role.USER),
   ReviewController.createReview
 );
-router.get(
-  "/reviews",
-  authVerify(USER_Role.USER, USER_Role.ADMIN),
-  ReviewController.reviews
-);
+router.get("/reviews/:id", ReviewController.reviews);
 
 export const reviewRoute = router;

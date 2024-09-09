@@ -13,5 +13,6 @@ export type IProduct = {
   category: string;
   brand: string;
   stock: number;
-  sold: number;
+  sold?: number;
+  producttype?: string;
 };

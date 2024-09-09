@@ -39,6 +39,7 @@ const createUser = async (req: Request, res: Response) => {
 const loginUser = async (req: Request, res: Response) => {
   try {
     const data = await req.body;
+    // console.log("get login data:", data);
     const existUser = await UserModel.findOne({ email: data.email }).select(
       "email password role name phone address"
     );
