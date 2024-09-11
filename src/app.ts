@@ -7,6 +7,8 @@ import notFound from "./app/middlewares/notFound";
 import { UserRoute } from "./app/modules/auth/user.route";
 import { ProductRoute } from "./app/modules/products/product.route";
 import { reviewRoute } from "./app/modules/review/review.route";
+import { paymentRoute } from "./app/modules/payment/payment.route";
+import { orderRoute } from "./app/modules/order/order.route";
 
 const corsOptions = {
   origin: [
@@ -30,6 +32,8 @@ app.get("/", (req, res) => {
 app.use("/api/auth", UserRoute);
 app.use("/api", ProductRoute);
 app.use("/api", reviewRoute);
+app.use("/api", paymentRoute);
+app.use("/api", orderRoute);
 
 app.use(globalErrorHandler);
 // route not found

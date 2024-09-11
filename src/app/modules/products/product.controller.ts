@@ -166,12 +166,38 @@ const deleteProduct = catchAsync(
     }
   }
 );
+const totalProducts = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const count = await ProductModel.countDocuments();
+
+      if (count < 1) {
+        return res.status(404).json({
+          success: false,
+          statusCode: 404,
+          message: "products data not found",
+          total: count,
+        });
+      } else {
+        return res.status(200).json({
+          success: true,
+          statusCode: 200,
+          message: "products retrieved successfully",
+          data: count,
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ status: false, message: "Something went wrong" });
+    }
+  }
+);
 export const ProductController = {
   createProduct,
   products,
   product,
   deleteProduct,
   flatSale,
+  totalProducts,
 };
 
 // const result = await ProductModel.create(data);

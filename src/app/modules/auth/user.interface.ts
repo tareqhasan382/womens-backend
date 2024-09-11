@@ -2,7 +2,7 @@ export type IUser = {
   name: string;
   email: string;
   password: string;
-  image: string;
+  image?: string;
   phone: string;
   role: "ADMIN" | "USER";
   address: string;

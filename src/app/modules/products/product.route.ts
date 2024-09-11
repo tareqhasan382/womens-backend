@@ -10,6 +10,7 @@ router.post(
   ProductController.createProduct
 );
 router.get("/products", ProductController.products);
+router.get("/totalproducts", ProductController.totalProducts);
 router.get("/flatSale", ProductController.flatSale);
 router.get("/product/:id", ProductController.product);
 router.delete(
