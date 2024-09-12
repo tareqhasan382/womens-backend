@@ -49,6 +49,9 @@ const OrderSchema: Schema = new Schema(
     transactionId: {
       type: String,
     },
+    bank_tran_id: {
+      type: String,
+    },
   },
   {
     timestamps: true,

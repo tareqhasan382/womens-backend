@@ -1,17 +1,19 @@
 import axios from "axios";
 import config from "../../../config";
-
+import orderModel from "../order/order.model";
+import { v4 as uuidv4 } from "uuid";
 const initPayment = async (payload: any) => {
+  const tran_id = uuidv4();
   try {
     const data = {
       store_id: config.ssl.storeId,
       store_passwd: config.ssl.storePass,
       total_amount: payload.totalPrice,
       currency: "BDT",
-      tran_id: "REF123", // use unique tran_id for each api call
-      success_url: "http://localhost:3000/payment-success",
-      fail_url: "http://localhost:3000/payment-fail",
-      cancel_url: "http://localhost:3030/cancel",
+      tran_id: tran_id,
+      success_url: "http://localhost:8000/api/payment-success",
+      fail_url: "http://localhost:8000/api/payment-fail",
+      cancel_url: "http://localhost:8000/api/payment-cancel",
       ipn_url: "http://localhost:3030/ipn",
       shipping_method: "Courier",
       product_name: payload.products,
@@ -36,9 +38,8 @@ const initPayment = async (payload: any) => {
       data: data,
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
-
-    // console.log("response:", response);
-    return response.data;
+    await orderModel.create({ ...payload, transactionId: tran_id });
+    return response.data.GatewayPageURL;
   } catch (error) {
     console.log("error:", error);
   }

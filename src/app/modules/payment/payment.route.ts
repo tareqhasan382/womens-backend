@@ -10,5 +10,8 @@ router.post(
   authVerify(USER_Role.USER, USER_Role.ADMIN),
   PaymentController.createPayment
 );
+router.post("/payment-success", PaymentController.paymentSuccess);
+router.post("/payment-fail", PaymentController.paymentFail);
+router.post("/payment-cancel", PaymentController.paymentCancel);
 
 export const paymentRoute = router;

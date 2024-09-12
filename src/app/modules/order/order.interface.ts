@@ -18,4 +18,5 @@ export type IOrderData = {
   status: string;
   paymentStatus: string;
   transactionId: string;
+  bank_tran_id: string;
 };
