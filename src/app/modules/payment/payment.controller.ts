@@ -55,7 +55,10 @@ const paymentSuccess = catchAsync(
         });
       }
 
-      return res.redirect("http://localhost:3000/payment-success");
+      return res.redirect(
+        "https://womens-fashion-client.vercel.app/payment-success"
+      );
+      // return res.redirect("http://localhost:3000/payment-success");
     } catch (error) {
       return res.status(500).json({
         status: false,
@@ -86,7 +89,9 @@ const paymentFail = catchAsync(
         });
       }
 
-      return res.redirect("http://localhost:3000/payment-fail");
+      return res.redirect(
+        "https://womens-fashion-client.vercel.app/payment-fail"
+      );
     } catch (error) {
       return res.status(500).json({
         status: false,
@@ -122,7 +127,9 @@ const paymentCancel = catchAsync(
         });
       }
 
-      return res.redirect("http://localhost:3000/payment-cancel");
+      return res.redirect(
+        "https://womens-fashion-client.vercel.app/payment-cancel"
+      );
     } catch (error) {
       return res.status(500).json({
         status: false,

@@ -15,6 +15,7 @@ const corsOptions = {
     "http://localhost:5173/",
     "http://localhost:5173",
     "http://localhost:3000",
+    "https://womens-fashion-client.vercel.app",
   ],
   credentials: true,
   optionSuccessStatus: 200,
