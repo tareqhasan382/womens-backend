@@ -10,4 +10,9 @@ router.get(
   authVerify(USER_Role.USER, USER_Role.ADMIN),
   OrderController.orders
 );
+router.get(
+  "/admin/orders",
+  authVerify(USER_Role.ADMIN),
+  OrderController.ordersAdmin
+);
 export const orderRoute = router;

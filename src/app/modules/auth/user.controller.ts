@@ -1,17 +1,18 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import bcrypt from "bcryptjs";
 import jwt, { Secret } from "jsonwebtoken";
 import config from "../../../config";
 import { UserModel } from "./user.model";
 import { SortOrder } from "mongoose";
+import catchAsync from "../../../shared/catchAsync";
 // import { UserModel } from "./user.model";
 const createUser = async (req: Request, res: Response) => {
   try {
     const data = await req.body;
     // console.log("data:", data);
     const existUser = await UserModel.findOne({ email: data.email });
-    console.log("existUser:", existUser);
+    // console.log("existUser:", existUser);
     if (existUser) {
       return res.status(400).json({
         status: false,
@@ -156,8 +157,33 @@ const totalUser = async (req: Request, res: Response) => {
     res.status(500).json({ status: false, message: "Something went wrong" });
   }
 };
+const profileUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = req.user;
+      if (!user) {
+        return res.status(401).json({
+          status: true,
+          message: "un-authorized",
+        });
+      }
+      const result = await UserModel.findById(user?.userId);
+
+      return res.status(200).json({
+        status: true,
+        data: result,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: false,
+        message: "Something went wrong",
+      });
+    }
+  }
+);
 export const UserController = {
   createUser,
   loginUser,
   totalUser,
+  profileUser,
 };
