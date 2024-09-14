@@ -30,11 +30,14 @@ const orders = catchAsync(
 const ordersAdmin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await orderModel.find().populate({
-        path: "products.product",
-        model: ProductModel,
-        select: "name price images",
-      });
+      const result = await orderModel
+        .find()
+        .populate({
+          path: "products.product",
+          model: ProductModel,
+          select: "name price images",
+        })
+        .sort({ createdAt: -1 });
 
       return res.status(200).json({
         status: true,
