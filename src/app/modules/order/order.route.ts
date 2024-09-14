@@ -10,6 +10,11 @@ router.get(
   authVerify(USER_Role.USER, USER_Role.ADMIN),
   OrderController.orders
 );
+router.patch(
+  "/admin/order/:id",
+  authVerify(USER_Role.ADMIN),
+  OrderController.updateOrderAdmin
+);
 router.get(
   "/admin/orders",
   authVerify(USER_Role.ADMIN),

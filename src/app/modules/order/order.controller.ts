@@ -48,7 +48,32 @@ const ordersAdmin = catchAsync(
     }
   }
 );
+const updateOrderAdmin = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = req.body;
+      const orderId = req.params.id;
+      const updatedOrder = await orderModel.findByIdAndUpdate(
+        orderId,
+        { paymentStatus: data?.paymentStatus },
+        { new: true }
+      );
+
+      if (!updatedOrder) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      res.status(200).json({ message: "Order updated", order: updatedOrder });
+    } catch (error) {
+      return res.status(500).json({
+        status: false,
+        message: "Something went wrong",
+      });
+    }
+  }
+);
 export const OrderController = {
   orders,
   ordersAdmin,
+  updateOrderAdmin,
 };
