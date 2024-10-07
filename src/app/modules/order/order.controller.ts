@@ -7,7 +7,7 @@ const orders = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = req.user;
-
+      // console.log("use:", user);
       const result = await orderModel
         .find({ user: user?.userId, status: { $ne: "Cancelled" } })
         .populate({
@@ -15,6 +15,7 @@ const orders = catchAsync(
           model: ProductModel,
           select: "name price images",
         });
+      // console.log("result:", result);
       return res.status(200).json({
         status: true,
         data: result,

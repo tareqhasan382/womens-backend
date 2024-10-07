@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-
 import bcrypt from "bcryptjs";
 import jwt, { Secret } from "jsonwebtoken";
 import config from "../../../config";
 import { UserModel } from "./user.model";
 import { SortOrder } from "mongoose";
 import catchAsync from "../../../shared/catchAsync";
-// import { UserModel } from "./user.model";
+import axios from "axios";
+import { google, Auth } from "googleapis";
 const createUser = async (req: Request, res: Response) => {
   try {
     const data = await req.body;
@@ -68,7 +68,7 @@ const loginUser = async (req: Request, res: Response) => {
       { userId: existUser._id, email: existUser.email, role: existUser.role },
       config.jwt.secret as Secret,
       {
-        expiresIn: "3 d",
+        expiresIn: "15 d",
       }
     );
 
@@ -181,9 +181,79 @@ const profileUser = catchAsync(
     }
   }
 );
+const googleAuth = async (req: Request, res: Response) => {
+  try {
+    const { code } = req.body;
+    // console.log("code:", code);
+    const oauth2Client: Auth.OAuth2Client = new google.auth.OAuth2(
+      config.google_client_id,
+      config.google_client_secret,
+      "postmessage" // "http://localhost:5173"
+    );
+    // const data = await oauth2Client.getToken(code);
+    const { tokens } = await oauth2Client.getToken(code);
+    // console.log("tokens:", tokens);
+    oauth2Client.setCredentials(tokens);
+    const userResponse = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.access_token}`
+    );
+    // console.log("userResponse:", userResponse.data); id, email, name, picture,
+    // console.log("userResponse:", userResponse);
+    const existUser = await UserModel.findOne({
+      email: userResponse?.data?.email,
+    });
+    // console.log("existUser:", existUser);
+    if (!existUser) {
+      const data = {
+        name: userResponse?.data.name,
+        email: userResponse?.data.email,
+        image: userResponse?.data.picture,
+        password: "",
+        phone: "",
+        address: "",
+      };
+      await UserModel.create(data);
+      // console.log("result:", result);  const result =
+    }
+    const jwtToken = jwt.sign(
+      {
+        userId: userResponse?.data.id,
+        email: userResponse?.data.email,
+        role: "USER",
+      },
+      config.jwt.secret as Secret,
+      {
+        expiresIn: "15 d",
+      }
+    );
+
+    // console.log("data:", { data: userResponse.data, token: jwtToken });
+    return res.status(201).json({
+      success: true,
+      statusCode: 200,
+      message: "User logged in successfully",
+      // token: jwtToken,
+      data: {
+        accessToken: jwtToken,
+        user: {
+          _id: userResponse?.data.id,
+          name: userResponse?.data.name,
+          email: userResponse?.data.email,
+          phone: "01989342794",
+          role: "USER",
+          address: "Dhaka Bangladesh",
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Error exchanging code for tokens:", error);
+    res.status(500).json({ error: "Failed to exchange authorization code" });
+  }
+};
 export const UserController = {
   createUser,
   loginUser,
   totalUser,
   profileUser,
+  googleAuth,
 };
