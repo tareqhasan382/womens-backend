@@ -21,10 +21,18 @@ const corsOptions = {
   credentials: true,
   optionSuccessStatus: 200,
 };
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+// app.use((req, res, next) => {
+//   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+//   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+//   next();
+// });
 app.use((req, res, next) => {
-  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  if (!req.path.includes("/api/auth/google")) {
+    // Set COOP and COEP only on routes that don't involve OAuth
+    res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+    res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  }
   next();
 });
 
