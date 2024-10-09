@@ -215,11 +215,17 @@ const googleAuth = async (req: Request, res: Response) => {
       await UserModel.create(data);
       // console.log("result:", result);  const result =
     }
+    const findUser = await UserModel.findOne({
+      email: userResponse?.data.email,
+    }).select("email role name phone address");
+    if (!findUser) {
+      return;
+    }
     const jwtToken = jwt.sign(
       {
-        userId: userResponse?.data.id,
-        email: userResponse?.data.email,
-        role: "USER",
+        userId: findUser._id,
+        email: findUser.email,
+        role: findUser.role,
       },
       config.jwt.secret as Secret,
       {
@@ -236,12 +242,12 @@ const googleAuth = async (req: Request, res: Response) => {
       data: {
         accessToken: jwtToken,
         user: {
-          _id: userResponse?.data.id,
-          name: userResponse?.data.name,
-          email: userResponse?.data.email,
-          phone: "01989342794",
-          role: "USER",
-          address: "Dhaka Bangladesh",
+          _id: findUser._id,
+          name: findUser.name,
+          email: findUser.email,
+          phone: findUser?.phone,
+          role: findUser?.role,
+          address: findUser?.address,
         },
       },
     });

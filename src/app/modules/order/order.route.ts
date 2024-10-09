@@ -14,7 +14,8 @@ router.patch(
 );
 router.get(
   "/admin/orders",
-  authVerify(USER_Role.ADMIN),
+
   OrderController.ordersAdmin
 );
 export const orderRoute = router;
+// authVerify(USER_Role.ADMIN),

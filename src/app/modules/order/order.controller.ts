@@ -7,7 +7,7 @@ const orders = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = req.user;
-      // console.log("use:", user);
+      console.log("orders user:", user);
       const result = await orderModel
         .find({ user: user?.userId, status: { $ne: "Cancelled" } })
         .populate({
@@ -30,6 +30,7 @@ const orders = catchAsync(
 );
 const ordersAdmin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    console.log("request order Admin");
     try {
       const result = await orderModel
         .find()
@@ -39,7 +40,7 @@ const ordersAdmin = catchAsync(
           select: "name price images",
         })
         .sort({ createdAt: -1 });
-
+      console.log("admin Orders:", result);
       return res.status(200).json({
         status: true,
         data: result,

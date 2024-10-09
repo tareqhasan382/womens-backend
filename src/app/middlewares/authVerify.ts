@@ -9,6 +9,7 @@ export const authVerify =
     try {
       // Check if Authorization header exists
       const token = req.headers.authorization;
+      // console.log("token:", token);
       if (!token) {
         return res
           .status(httpStatus.UNAUTHORIZED)
